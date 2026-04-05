@@ -9,6 +9,7 @@ on:
 permissions:
   pages: write
   id-token: write
+  content: read
 
 jobs:
   deploy:
@@ -34,6 +35,7 @@ jobs:
         #step 3: upload static code artifact
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v4
+
         with:
             path: '.'
 

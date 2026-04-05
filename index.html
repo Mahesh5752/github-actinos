@@ -5,208 +5,281 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mahesh Jadhav | DevOps Engineer</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
+:root {
+    --glass: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.2);
+    --accent: #00e6ff;
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
 }
 
 body {
-    background: linear-gradient(270deg, #020617, #0f172a, #020617);
+    background: linear-gradient(270deg,#0f2027,#203a43,#2c5364);
     background-size: 600% 600%;
-    animation: bgMove 10s infinite;
-    color: white;
+    animation: bgMove 15s ease infinite;
+    color:white;
+    overflow-x:hidden;
 }
 
+/* Animated background */
 @keyframes bgMove {
-    0% {background-position: 0%}
-    50% {background-position: 100%}
-    100% {background-position: 0%}
+    0%{background-position:0%}
+    50%{background-position:100%}
+    100%{background-position:0%}
 }
 
+/* floating blur circles */
+body::before, body::after {
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:rgba(0,255,255,0.1);
+    border-radius:50%;
+    filter:blur(80px);
+    z-index:-1;
+}
+body::before { top:10%; left:10%; }
+body::after { bottom:10%; right:10%; }
+
+/* container */
+.container {
+    max-width:1100px;
+    margin:50px auto;
+    padding:40px;
+    background:var(--glass);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    border-radius:25px;
+}
+
+/* header */
 header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 40px;
-    backdrop-filter: blur(10px);
+    text-align:center;
+    margin-bottom:60px;
 }
 
-nav a {
-    margin: 10px;
-    color: #38bdf8;
-    text-decoration: none;
+.profile-title {
+    font-size:3rem;
+    background:linear-gradient(to right,#fff,var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-.hero {
-    text-align: center;
-    padding: 100px 20px;
+.tagline {
+    margin-top:10px;
+    font-size:1.2rem;
+    color:#ccc;
 }
 
-.hero h1 span {
-    color: #38bdf8;
-}
-
+/* typing */
 .typing {
-    font-size: 22px;
-    border-right: 2px solid #38bdf8;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
+    color:var(--accent);
+    font-weight:bold;
 }
 
-button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    background: #38bdf8;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* grid */
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
 }
 
-section {
-    padding: 60px 20px;
-    text-align: center;
-}
-
-.skills, .projects {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
+/* cards */
 .card {
-    background: rgba(255,255,255,0.05);
-    margin: 15px;
-    padding: 20px;
-    border-radius: 15px;
-    width: 220px;
-    transition: 0.3s;
+    background:rgba(255,255,255,0.05);
+    padding:25px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    transition:0.4s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before {
+    content:"";
+    position:absolute;
+    width:150%;
+    height:150%;
+    background:linear-gradient(120deg,transparent,var(--accent),transparent);
+    transform:rotate(25deg);
+    top:-100%;
+    left:-100%;
+    transition:0.5s;
+}
+
+.card:hover::before {
+    top:100%;
+    left:100%;
 }
 
 .card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 0 20px #38bdf8;
+    transform:translateY(-12px) scale(1.02);
+    border-color:var(--accent);
+    box-shadow:0 0 25px rgba(0,230,255,0.4);
 }
 
-.hidden {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: 0.6s;
+.card h3 {
+    color:var(--accent);
+    margin-bottom:10px;
 }
 
-.show {
-    opacity: 1;
-    transform: translateY(0);
+/* tags */
+.tags {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
 }
 
-footer {
-    padding: 20px;
-    text-align: center;
+.tag {
+    padding:5px 12px;
+    border-radius:20px;
+    background:rgba(0,230,255,0.15);
+    border:1px solid var(--accent);
+    font-size:0.8rem;
+    transition:0.3s;
+}
+
+.tag:hover {
+    background:var(--accent);
+    color:black;
+    transform:scale(1.1);
+}
+
+/* social */
+.social-links {
+    margin-top:40px;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+.social-icon {
+    font-size:1.6rem;
+    color:white;
+    transition:0.3s;
+}
+
+.social-icon:hover {
+    color:var(--accent);
+    transform:translateY(-5px) scale(1.3);
+}
+
+/* button */
+.btn {
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(45deg,#00e6ff,#00ff88);
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn:hover {
+    transform:scale(1.1);
+    box-shadow:0 0 20px var(--accent);
+}
+
+/* responsive */
+@media(max-width:768px){
+    .profile-title{font-size:2rem;}
+    .container{margin:20px;}
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
 <header>
-    <h2>Mahesh</h2>
-    <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-    </nav>
+    <h1 class="profile-title">Mahesh Jadhav</h1>
+    <p class="tagline">
+        I am a <span class="typing"></span>
+    </p>
+    <button class="btn">Hire Me</button>
 </header>
 
-<div class="hero">
-    <h1>Hi, I'm <span>Mahesh Jadhav</span></h1>
-    <div class="typing" id="typing"></div>
-    <br>
-    <button onclick="downloadResume()">Download Resume</button>
+<div class="grid">
+
+<div class="card">
+    <h3><i class="fas fa-user"></i> About Me</h3>
+    <p>
+        I'm Mahesh Jadhav, a BCA graduate and aspiring DevOps Engineer.
+        I have experience at Datamatics and I focus on automation,
+        CI/CD pipelines, and cloud technologies.
+    </p>
 </div>
 
-<section id="about" class="hidden">
-    <h1>About Me</h1>
-    <p>BCA graduate passionate about DevOps, Docker, Kubernetes & CI/CD.</p>
-</section>
-
-<section id="skills" class="hidden">
-    <h1>Skills</h1>
-    <div class="skills">
-        <div class="card">Docker</div>
-        <div class="card">Kubernetes</div>
-        <div class="card">Linux</div>
-        <div class="card">GitHub</div>
-        <div class="card">Python</div>
-        <div class="card">Terraform</div>
+<div class="card">
+    <h3><i class="fas fa-code-branch"></i> Tech Stack</h3>
+    <div class="tags">
+        <span class="tag">Linux</span>
+        <span class="tag">Docker</span>
+        <span class="tag">Kubernetes</span>
+        <span class="tag">GitHub</span>
+        <span class="tag">CI/CD</span>
+        <span class="tag">Terraform</span>
+        <span class="tag">Python</span>
     </div>
-</section>
+</div>
 
-<section id="projects" class="hidden">
-    <h1>Projects</h1>
-    <div class="projects">
-        <div class="card">
-            <h3>AI Bank App</h3>
-            <p>Docker + CI/CD implementation</p>
-        </div>
-        <div class="card">
-            <h3>CI/CD Pipeline</h3>
-            <p>Automation using GitHub Actions</p>
-        </div>
-    </div>
-</section>
+<div class="card">
+    <h3><i class="fas fa-laptop-code"></i> Projects</h3>
+    <p>
+        Building DevOps pipelines, Dockerized apps, and deploying
+        projects using GitHub Actions & cloud platforms.
+    </p>
+</div>
 
-<footer>
-    <p>© 2026 Mahesh Jadhav</p>
-</footer>
+<div class="card">
+    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+    <p>Bachelor of Computer Applications (BCA)</p>
+</div>
+
+</div>
+
+<div class="social-links">
+    <a href="https://github.com" class="social-icon"><i class="fab fa-github"></i></a>
+    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+    <a href="mailto:maheshrav015@gmail.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+</div>
+
+</div>
 
 <script>
-// Typing Animation
-const text = ["DevOps Engineer", "Docker Expert", "CI/CD Specialist"];
-let i = 0, j = 0;
-let current = "";
-let isDeleting = false;
+// typing animation
+const roles = ["DevOps Engineer","CI/CD Enthusiast","Cloud Learner"];
+let i=0, j=0, current="", isDeleting=false;
 
-function type() {
-    if (i < text.length) {
-        if (!isDeleting && j <= text[i].length) {
-            current = text[i].substring(0, j++);
-        } else if (isDeleting && j >= 0) {
-            current = text[i].substring(0, j--);
-        }
+function type(){
+    current = roles[i];
+    document.querySelector(".typing").textContent =
+        current.substring(0,j);
 
-        document.getElementById("typing").innerHTML = current;
-
-        if (j == text[i].length) isDeleting = true;
-        if (j == 0) {
-            isDeleting = false;
-            i++;
-            if (i == text.length) i = 0;
-        }
+    if(!isDeleting && j<current.length){
+        j++;
+        setTimeout(type,100);
+    } else if(isDeleting && j>0){
+        j--;
+        setTimeout(type,50);
+    } else {
+        isDeleting = !isDeleting;
+        if(!isDeleting) i=(i+1)%roles.length;
+        setTimeout(type,1000);
     }
-    setTimeout(type, isDeleting ? 50 : 100);
 }
 type();
-
-// Scroll Animation
-const elements = document.querySelectorAll('.hidden');
-
-window.addEventListener('scroll', () => {
-    elements.forEach(el => {
-        const top = el.getBoundingClientRect().top;
-        if (top < window.innerHeight - 100) {
-            el.classList.add('show');
-        }
-    });
-});
-
-// Resume Button
-function downloadResume() {
-    alert("Add your resume link!");
-}
 </script>
 
 </body>
