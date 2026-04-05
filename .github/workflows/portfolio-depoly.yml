@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+    workflow_dispatch:
 
 permissions:
   pages: write
@@ -33,6 +34,9 @@ jobs:
         #step 3: upload static code artifact
       - name: Upload static artifact
         uses: actions/upload-pages-artifact@v4
+        with:
+            path: '.'
+
         # make page live
         #step 4: make page live 
       - name: Deploy to GitHub Pages
