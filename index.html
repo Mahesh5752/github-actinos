@@ -1,59 +1,212 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahesh Jadhav | DevOps Engineer</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: linear-gradient(to right, #4facfe, #00f2fe);
-            text-align: center;
-            color: white;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
-        .box {
-            margin-top: 150px;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-        h1 {
-            font-size: 50px;
-        }
+body {
+    background: linear-gradient(270deg, #020617, #0f172a, #020617);
+    background-size: 600% 600%;
+    animation: bgMove 10s infinite;
+    color: white;
+}
 
-        p {
-            font-size: 20px;
-        }
+@keyframes bgMove {
+    0% {background-position: 0%}
+    50% {background-position: 100%}
+    100% {background-position: 0%}
+}
 
-        button {
-            padding: 10px 20px;
-            border: none;
-            background: white;
-            color: #333;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    backdrop-filter: blur(10px);
+}
 
-        button:hover {
-            background: #ddd;
-        }
-    </style>
+nav a {
+    margin: 10px;
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 span {
+    color: #38bdf8;
+}
+
+.typing {
+    font-size: 22px;
+    border-right: 2px solid #38bdf8;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #38bdf8;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.skills, .projects {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    margin: 15px;
+    padding: 20px;
+    border-radius: 15px;
+    width: 220px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 0 20px #38bdf8;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 0.6s;
+}
+
+.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+footer {
+    padding: 20px;
+    text-align: center;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-    <h1>Welcome to HTML Page 🎉</h1>
-    <p>This is your simple web page</p>
+<header>
+    <h2>Mahesh</h2>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+    </nav>
+</header>
 
-    <button onclick="showMessage()">Click Me</button>
+<div class="hero">
+    <h1>Hi, I'm <span>Mahesh Jadhav</span></h1>
+    <div class="typing" id="typing"></div>
+    <br>
+    <button onclick="downloadResume()">Download Resume</button>
 </div>
 
+<section id="about" class="hidden">
+    <h1>About Me</h1>
+    <p>BCA graduate passionate about DevOps, Docker, Kubernetes & CI/CD.</p>
+</section>
+
+<section id="skills" class="hidden">
+    <h1>Skills</h1>
+    <div class="skills">
+        <div class="card">Docker</div>
+        <div class="card">Kubernetes</div>
+        <div class="card">Linux</div>
+        <div class="card">GitHub</div>
+        <div class="card">Python</div>
+        <div class="card">Terraform</div>
+    </div>
+</section>
+
+<section id="projects" class="hidden">
+    <h1>Projects</h1>
+    <div class="projects">
+        <div class="card">
+            <h3>AI Bank App</h3>
+            <p>Docker + CI/CD implementation</p>
+        </div>
+        <div class="card">
+            <h3>CI/CD Pipeline</h3>
+            <p>Automation using GitHub Actions</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Mahesh Jadhav</p>
+</footer>
+
 <script>
-    function showMessage() {
-        alert("Welcome Mahesh! 🚀");
+// Typing Animation
+const text = ["DevOps Engineer", "Docker Expert", "CI/CD Specialist"];
+let i = 0, j = 0;
+let current = "";
+let isDeleting = false;
+
+function type() {
+    if (i < text.length) {
+        if (!isDeleting && j <= text[i].length) {
+            current = text[i].substring(0, j++);
+        } else if (isDeleting && j >= 0) {
+            current = text[i].substring(0, j--);
+        }
+
+        document.getElementById("typing").innerHTML = current;
+
+        if (j == text[i].length) isDeleting = true;
+        if (j == 0) {
+            isDeleting = false;
+            i++;
+            if (i == text.length) i = 0;
+        }
     }
+    setTimeout(type, isDeleting ? 50 : 100);
+}
+type();
+
+// Scroll Animation
+const elements = document.querySelectorAll('.hidden');
+
+window.addEventListener('scroll', () => {
+    elements.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < window.innerHeight - 100) {
+            el.classList.add('show');
+        }
+    });
+});
+
+// Resume Button
+function downloadResume() {
+    alert("Add your resume link!");
+}
 </script>
 
 </body>
