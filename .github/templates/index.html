@@ -3,72 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Zero To Hero</title>
+    <title>DevOps Zero To Hero | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Animated Gradient Background */
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #000000);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Inter', sans-serif;
             color: #e0e0e0;
+            overflow: hidden;
         }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
             text-align: center;
-            padding: 2rem;
-            max-width: 640px;
+            padding: 3rem;
+            max-width: 800px;
+            z-index: 1;
         }
+
         h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7, #ff00c8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(123, 47, 247, 0.3));
         }
+
         .badge {
             display: inline-block;
-            margin: 1rem 0 2rem;
-            padding: 0.4rem 1.2rem;
+            margin: 1rem 0 2.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(123, 47, 247, 0.1);
             border: 1px solid #7b2ff7;
             border-radius: 999px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 400;
             color: #c4b5fd;
-            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            box-shadow: 0 0 15px rgba(123, 47, 247, 0.2);
         }
+
         .cards {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .card {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px); /* Glass effect */
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem 1.8rem;
-            min-width: 150px;
+            border-radius: 20px;
+            padding: 2rem;
+            min-width: 180px;
             flex: 1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #00d2ff;
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Subtle glow line on top of card */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #7b2ff7, transparent);
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .card:hover::before { opacity: 1; }
+
         .card span {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             color: #9ca3af;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.6rem;
         }
+
         .card strong {
-            font-size: 1.25rem;
-            color: #f9fafb;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+        }
+
+        /* Responsive Mobile adjustment */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .container { padding: 1rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>DevOps Zero To Hero</h1>
-        <div class="badge">Josh Batch 10</div>
+        <div class="badge">Josh Batch 10 • Mahesh Jadhav</div>
+        
         <div class="cards">
             <div class="card">
                 <span>Framework</span>
