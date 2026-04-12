@@ -1,0 +1,18 @@
+name: Devsecops End to End Pipeline 
+
+on:
+  workflow_dispatch:
+
+jobs:
+    
+    secrets-scan:
+        uses: ./.github/workflows/secrets-scan.yml
+
+    docker-lint:
+        uses: ./.github/workflows/docker-lint.yml
+
+    image-scan:
+        uses: ./.github/workflows/image-scan.yml
+
+    deploy-to-server:
+        uses: ./.github/workflows/deploy-to-server.yml  
