@@ -1,10 +1,7 @@
 name: portfolio
 
 on:
-  push:
-   branches:
-     - main
-  workflow_dispatch:
+  workflow_call:
     
 
 permissions:
@@ -18,7 +15,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deploy-pages.outputs.page_url }}
-
     steps:
         # get access to your Portfolio code via a per-built ations
         #step 1: checkout code
