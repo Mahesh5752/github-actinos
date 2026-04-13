@@ -1,28 +1,33 @@
-name: Docker Build and Push
+#this will deploy the safe / secure / tested app to prod server
+ 
+name: Deploy to Server
 
-on:
-  workflow_dispatch:
-    
+on: 
+     workflow_call:
+
 jobs:
-  build-and-push:   
-    runs-on: ubuntu-latest
+    Deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                username: ${{ vars.DOCKERHUB_USER }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: SSH to pro server
+              uses: appleboy/ssh-action@v0.1.1
+              with:
+                 host: ${{ secrets.EC2_SSH_HOST }}
+                 username: ${{ secrets.EC2_SSH_USER }}
+                 key: ${{ secrets.EC2_PRIVATE_SSH_KEY }} 
+                 script: |
+                    echo "starting deployment"
+                    mkdir devops
 
-      - name: Build and push Docker Hub
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ vars.DOCKERHUB_USER }}/github-actions-app:${{ github.ref_name }}
-            ${{ vars.DOCKERHUB_USER }}/github-actions-app:latest
-            ${{ vars.DOCKERHUB_USER }}/github-actions-app:${{ github.sha }} 
+            - name: Logout from Docker Hub
+              if: always()
+              run: docker logout
