@@ -38,6 +38,7 @@ jobs:
         # make page live
         #step 4: make page live 
       - name: Deploy to GitHub Pages
+        id: deploy-pages
         uses: actions/deploy-pages@v4
             
         
