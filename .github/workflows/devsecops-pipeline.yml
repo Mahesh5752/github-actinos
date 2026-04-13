@@ -8,7 +8,8 @@ jobs:
     
     secrets-scan:
         uses: ./.github/workflows/secrets-scan.yml
-
+        secrets: inherit
+        
     docker-lint:
         uses: ./.github/workflows/docker-lint.yml
 
