@@ -1,20 +1,17 @@
 name: Devsecops End to End Pipeline 
 
 on:
-  push:
-    branches: [ main ]  
+  workflow_dispatch:
 
 jobs:
-    
+    code-quality-scan:
+        uses: ./.github/workflows/code-quality-scan.yml
+               
     secrets-scan:
-        uses: ./.github/workflows/secrets-scan.yml
-        secrets: inherit
+        uses: ./.github/workflows/secrets-scan.yml  
+
+    dependency-scan:
+        uses: ./.github/workflows/dependency-scan.yml
         
-    docker-lint:
+    docker-scan:
         uses: ./.github/workflows/docker-lint.yml
-
-    image-scan:
-        uses: ./.github/workflows/image-scan.yml
-
-    deploy-to-server:
-        uses: ./.github/workflows/deploy-to-server.yml  
