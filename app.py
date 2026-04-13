@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+
 app = Flask(__name__)
 
 
@@ -7,9 +8,11 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
+
 @app.route('/health')
 def health():
     return 'Server is up and running'
 
-app.run(port=80)
-   
+
+if __name__ == "__main__":
+    app.run(port=80)
