@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: SSH to pro server
-              uses: appleboy/ssh-action@v0.1.1
+              uses: appleboy/ssh-action@v1.0.3
               with:
                  host: ${{ secrets.EC2_SSH_HOST }}
                  username: ${{ secrets.EC2_SSH_USER }}
@@ -18,4 +18,6 @@ jobs:
                  script: |
                     echo "starting deployment"
                     mkdir devops
+
+                    
 
