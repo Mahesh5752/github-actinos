@@ -11,13 +11,14 @@ jobs:
 
     secrets-scan:
         uses: ./.github/workflows/secrets-scan.yml  
+        secrets: inherit
 
     dependency-scan:
         uses: ./.github/workflows/Dependency-scan.yml
         
     docker-scan:
         uses: ./.github/workflows/docker-lint.yml
-        
+
     # build once the security scanning is successful
     build:
         needs: [code-quality-scan, secrets-scan, dependency-scan, docker-scan]  
