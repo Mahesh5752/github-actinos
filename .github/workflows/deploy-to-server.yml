@@ -8,18 +8,13 @@ on:
 jobs:
     Deploy:
         runs-on: ubuntu-latest
-        env:
-          DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-          DOCKER_TAG: ${{ github.event.workflow_run.head_sha }}
-
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
             
             - name: set DOCKER_TAG env variable
               run: |
-                 echo "DOCKER_TAG=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
-
+                    echo "DOCKER_TAG=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
             
             - name: SSH to pro server & create app folder
               uses: appleboy/ssh-action@v1.0.3
@@ -53,35 +48,26 @@ jobs:
                  key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
                  script: |
-                    # echo "Running  App"
+                    echo "Running  App"
                     
-                      
-                    # DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
-                    # DOCKER_TAG=latest
+                    export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
+                    export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
+                    export HEAD_SHA=${{ env.DOCKER_TAG }}
+                    echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
+                    cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
 
-                    # echo "User: $DOCKERHUB_USER"
-                    # echo "Tag: $DOCKER_TAG"
-
-                    # # Docker login (correct)
-                    # echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
-
-                    # cd ~/devops
-
-                    # # Pass env inline (important)
-                    # sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
-                    # sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
-                    script: |
-                      echo "Running App"
-
+                    Set correct variables
                       DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
                       DOCKER_TAG=latest
 
                       echo "User: $DOCKERHUB_USER"
                       echo "Tag: $DOCKER_TAG"
 
-                      echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
+                      # Docker login (correct)
+                      echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ vars.DOCKERHUB_USER }}" --password-stdin
 
                       cd ~/devops
 
+                      # Pass env inline (important)
                       sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
                       sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
