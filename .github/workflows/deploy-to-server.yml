@@ -57,14 +57,15 @@ jobs:
                     
                       
                     DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
-                    #DOCKER_TAG=latest
+                 
 
                     echo "User: $DOCKERHUB_USER"
-                    #echo "Tag: $DOCKER_TAG"
+                 
 
                     # Docker login (correct)
                     echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
 
+                    cd ~/devops
 
                     # Pass env inline (important)
                     sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
