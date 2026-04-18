@@ -53,13 +53,14 @@ jobs:
                     export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
                     export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
                     export HEAD_SHA=${{ env.DOCKER_TAG }}
+                    export DOCKER_HUB_USER=your_mahesh5752
                     echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
                     cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
 
                     Set correct variables
-                      USER_NAME="${{ secrets.DOCKERHUB_USER || 'mahesh5752' }}"
+                      USER_NAME="${{ secrets.DOCKERHUB_USER }}"
                       TAG_NAME="latest"
-                      
+
                       echo "User: $DOCKERHUB_USER"
                       echo "Tag: $DOCKER_TAG"
 
