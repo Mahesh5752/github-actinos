@@ -57,9 +57,9 @@ jobs:
                     cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
 
                     Set correct variables
-                      DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
-                      DOCKER_TAG=latest
-
+                      USER_NAME="${{ secrets.DOCKERHUB_USER || 'mahesh5752' }}"
+                      TAG_NAME="latest"
+                      
                       echo "User: $DOCKERHUB_USER"
                       echo "Tag: $DOCKER_TAG"
 
