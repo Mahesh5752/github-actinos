@@ -31,22 +31,28 @@ jobs:
           host: ${{ secrets.EC2_SSH_HOST }}
           username: ${{ secrets.EC2_SSH_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          
           script: |
-                echo "Running App"
+            echo "Running App Deployment..."
+            
+            # Use 'vars' or 'secrets' consistently. 
+            # If you saved 'mahesh5752' in Variables, use vars.
+            # If you saved it in Secrets, use secrets.
+            D_USER="${{ vars.DOCKERHUB_USER }}"
+            D_TAG="latest"
 
-                DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
-                DOCKER_TAG=latest
+            echo "Target User: $D_USER"
+            echo "Target Tag: $D_TAG"
 
-                echo "User: $DOCKERHUB_USER"
-                echo "Tag: $DOCKER_TAG"
+            # 1. Login to Docker Hub
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "$D_USER" --password-stdin
 
-                echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
+            # 2. Navigate and Deploy
+            cd ~/devops
+            
+            # We pass the variables directly to the docker compose command
+            sudo DOCKERHUB_USER=$D_USER DOCKER_TAG=$D_TAG docker compose down
+            sudo DOCKERHUB_USER=$D_USER DOCKER_TAG=$D_TAG docker compose up -d --pull always
 
-                cd ~/devops
-
-                sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
-                sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
 
 
 
