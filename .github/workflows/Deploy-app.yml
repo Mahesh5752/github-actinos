@@ -2,9 +2,8 @@ name: Deploy flask app
 
 on:
   workflow_run:
-    workflows: ["Build and Push"] # name of the upstream workflow that builds and pushes workflow
-    types:
-      - completed
+    workflows: ["Build and & Push"] # name of the upstream workflow that builds and pushes workflow
+    types: [completed]
     branches:
       - main
 
@@ -16,8 +15,9 @@ jobs:
     env:
       if: github.event.workflow_run.conclusion == 'success' 
       DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-      
-      DOCKER_TAG: ${{ github.eventgithub.sha }}
+      DOCKER_TAG: ${{ github.event.workflow_run.head_sha }}
+
+      runs-on: self-hosted
 
     steps:
       - name: Checkout code

@@ -9,6 +9,11 @@ jobs:
     Deploy:
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: set HEAD_SHA env variable
+              run: echo "HEAD_SHA=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
             
             - name: SSH to pro server & create app folder
               uses: appleboy/ssh-action@v1.0.3
@@ -18,11 +23,12 @@ jobs:
                  key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
                  script: |
-                    echo "starting deployment"
+                    echo "installing required packages & folders"
+                    sudo apt-get update && sudo apt-get install docker.io docker-compose-v2 -y
+                    sudo usermod -aG docker $USER && newgrp docker
                     mkdir -p devops
             
-            - name: Checkout code
-              uses: actions/checkout@v4
+            
 
             - name: copy the docker-compose file
               uses: appleboy/scp-action@v1
@@ -42,9 +48,8 @@ jobs:
 
                  script: |
                     echo "Running  App"
-                    sudo apt-get update && sudo apt-get install docker.io docker-compose-v2 -y
-                    sudo usermod -aG docker $USER && newgrp docker
+                    
                     export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
                     export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
-                    echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ vars.DOCKERHUB_USER }} --password-stdin    
+                    echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
                     cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
