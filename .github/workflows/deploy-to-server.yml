@@ -55,31 +55,17 @@ jobs:
                  script: |
                     echo "Running  App"
                     
-                    export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
-                    export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
-                    export DOCKER_TAG=$GITHUB_WORKFLOW_SHA
+                      
+                    DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
+                    #DOCKER_TAG=latest
+
                     echo "User: $DOCKERHUB_USER"
-                    echo "Tag: $DOCKER_TAG"
-                    echo "User: $DOCKERHUB_USER"
-                    echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ vars.DOCKERHUB_USER }}" --password-stdin
-                    echo ${{github.sha}}   
-                    cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
+                    #echo "Tag: $DOCKER_TAG"
+
+                    # Docker login (correct)
+                    echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
 
 
-                    
-
-                      # # Set variables CORRECTLY
-                      # DOCKERHUB_USER=${{ vars.DOCKERHUB_USER }}
-                      # DOCKER_TAG=latest
-
-                      # echo "User: $DOCKERHUB_USER"
-                      # echo "Tag: $DOCKER_TAG"
-
-                      # # Docker login (with sudo)
-                      # echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ vars.DOCKERHUB_USER }}" --password-stdin
-
-                      # cd ~/devops
-
-                      # # Pass variables INLINE (THIS IS THE REAL FIX)
-                      # sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
-                      # sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --build --force-recreate --pull always
+                    # Pass env inline (important)
+                    sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
+                    sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
