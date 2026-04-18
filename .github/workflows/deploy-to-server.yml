@@ -66,7 +66,7 @@ jobs:
                     echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
 
                     cd ~/devops
-                    
+
                     # Pass env inline (important)
                     sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
                     sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
