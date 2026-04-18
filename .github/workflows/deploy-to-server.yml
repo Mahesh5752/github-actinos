@@ -16,6 +16,10 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
             
+            - name: set DOCKER_TAG env variable
+              run: |
+                 echo "DOCKER_TAG=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
+
             
             - name: SSH to pro server & create app folder
               uses: appleboy/ssh-action@v1.0.3
@@ -53,5 +57,7 @@ jobs:
                     
                     export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
                     export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
+                    export DOCKER_TAG=$GITHUB_WORKFLOW_SHA
+                    echo ${{github.sha}}
                     echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
                     cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
