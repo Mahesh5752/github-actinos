@@ -2,71 +2,136 @@
  
 name: Deploy to Server
 
+# on: 
+#      workflow_call:
+#         name: Deploy to Server
+
 on: 
-     workflow_call:
+  workflow_call:
 
 jobs:
-    Deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-            
-            - name: set DOCKER_TAG env variable
-              run: |
-                    echo "DOCKER_TAG=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
-            
-            - name: SSH to pro server & create app folder
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                 host: ${{ secrets.EC2_SSH_HOST }}
-                 username: ${{ secrets.EC2_SSH_USER }}
-                 key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-                 script: |
-                    echo "installing required packages & folders"
-                    sudo apt-get update && sudo apt-get install docker.io docker-compose-v2 -y
-                    sudo usermod -aG docker $USER && newgrp docker
-                    mkdir -p devops
+      - name: copy the docker-compose file
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml"
+          target: "~/devops"
+
+      - name: SSH to pro server & run the app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            echo "Running App Deployment..."
+            
+            # Use 'vars' or 'secrets' consistently. 
+            # If you saved 'mahesh5752' in Variables, use vars.
+            # If you saved it in Secrets, use secrets.
+            D_USER="${{ vars.DOCKERHUB_USER }}"
+            D_TAG="latest"
+
+            echo "Target User: $D_USER"
+            echo "Target Tag: $D_TAG"
+
+            # 1. Login to Docker Hub
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "$D_USER" --password-stdin
+
+            # 2. Navigate and Deploy
+            cd ~/devops
+            
+            # We pass the variables directly to the docker compose command
+            sudo DOCKERHUB_USER=$D_USER DOCKER_TAG=$D_TAG docker compose down
+            sudo DOCKERHUB_USER=$D_USER DOCKER_TAG=$D_TAG docker compose up -d --pull always
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# jobs:
+#     Deploy:
+#         runs-on: ubuntu-latest
+#         steps:
+#             - name: Checkout code
+#               uses: actions/checkout@v4
+            
+#             - name: set HEAD_SHA env variable
+#               run: |
+#                     echo "DOCKER=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
+            
+#             - name: SSH to pro server & create app folder
+#               uses: appleboy/ssh-action@v1.0.3
+#               with:
+#                  host: ${{ secrets.EC2_SSH_HOST }}
+#                  username: ${{ secrets.EC2_SSH_USER }}
+#                  key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+
+#                  script: |
+#                     echo "installing required packages & folders"
+#                     sudo apt-get update && sudo apt-get install docker.io docker-compose-v2 -y
+#                     sudo usermod -aG docker $USER && newgrp docker
+#                     mkdir -p devops
             
             
 
-            - name: copy the docker-compose file
-              uses: appleboy/scp-action@v1
-              with:
-                 host: ${{ secrets.EC2_SSH_HOST }}
-                 username: ${{ secrets.EC2_SSH_USER }}
-                 key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-                 source: "docker-compose.yml"
-                 target: ~/devops
+#             - name: copy the docker-compose file
+#               uses: appleboy/scp-action@v1
+#               with:
+#                  host: ${{ secrets.EC2_SSH_HOST }}
+#                  username: ${{ secrets.EC2_SSH_USER }}
+#                  key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+#                  source: "docker-compose.yml"
+#                  target: ~/devops
         
-            - name: SSH to pro server & run the app
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                 host: ${{ secrets.EC2_SSH_HOST }}
-                 username: ${{ secrets.EC2_SSH_USER }}
-                 key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+#             - name: SSH to pro server & run the app
+#               uses: appleboy/ssh-action@v1.0.3
+#               with:
+#                  host: ${{ secrets.EC2_SSH_HOST }}
+#                  username: ${{ secrets.EC2_SSH_USER }}
+#                  key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
 
-                 script: |
-                    echo "Running  App"
+#                  script: |
+#                     echo "Running  App"
                     
-                    export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
-                    export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
-                    export HEAD_SHA=${{ env.DOCKER_TAG }}
-                    export DOCKER_HUB_USER=your_mahesh5752
-                    echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
-                    cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
-
-
-                          DOCKERHUB_USER=${{ secrets.DOCKERHUB_USER }}
-                          DOCKER_TAG=latest
-
-                          echo "User: $DOCKERHUB_USER"
-                          echo "Tag: $DOCKER_TAG"
-
-                          echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ vars.DOCKERHUB_USER }}" --password-stdin
-
-                          cd ~/devops
-
-                          sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose down
-                          sudo DOCKERHUB_USER=$DOCKERHUB_USER DOCKER_TAG=$DOCKER_TAG docker compose up -d --pull always --force-recreate
+#                     export DOCKER_USER=${{ vars.DOCKERHUB_USER }}
+#                     export DOCKER_TAG=${{ github.event.workflow_run.head_sha }}
+#                     echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ vars.DOCKERHUB_USER }} --password-stdin    
+#                     cd ~/devops && docker compose down && docker compose up -d --build --force-recreate --pull always
